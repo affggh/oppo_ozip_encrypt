@@ -2,7 +2,7 @@ CC = gcc
 LD = gcc
 AR = ar
 STRIP = strip
-CFLAGS = -Werror -O3
+CFLAGS = -O3
 
 default : all
 
