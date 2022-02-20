@@ -14,6 +14,12 @@
 #define SHA1_LENTH 20
 #define ECB 1
 
+#ifdef SHOW_PROGRESS
+#include "progressbar.h"
+#include "statusbar.h"
+#include <unistd.h>
+#endif
+
 /*
  OZIP 文件格式
  Magic OPPOENCRYPT! 0x00 0x00 0x00 0x00
@@ -148,9 +154,14 @@ int main(int argc, char *argv[]) {
 	while(ftell(fp2)!=4176){
 		fputc(0x00, fp2); // 补0
 	}
-	
+	#ifdef SHOW_PROGRESS
+    int left = size / 16384;
+    progressbar *pg =progressbar_new("Encrypt", left);
+    #endif
 	// Data encryption
+    #ifndef SHOW_PROGRESS
 	fprintf(stdout, "Encrypt File...\n");
+    #endif
 	uint8_t buf[16], buf2[16384];
 	AES_init_ctx(&ctx, key);
 	fseek(fp, 0 , SEEK_SET);
@@ -167,9 +178,14 @@ int main(int argc, char *argv[]) {
 			fread(buf2, 16384, 1, fp);
 			fwrite(buf2, 16384, 1, fp2);
 		}
+        #ifdef SHOW_PROGRESS
+        progressbar_inc(pg);
+        #endif
 		//fputs("Encrypt\n", stdout);
 	}
-	
+	#ifdef SHOW_PROGRESS
+    progressbar_finish(pg);
+    #endif
 	fclose(fp);
 	fclose(fp2);
 	return 0;
