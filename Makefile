@@ -2,7 +2,8 @@ CC = gcc
 LD = gcc
 AR = ar
 STRIP = strip
-CFLAGS = -O3 -DSHOW_PROGRESS
+# CFLAGS = -O3 -DSHOW_PROGRESS
+CFLAGS = -O3
 
 default : all
 
